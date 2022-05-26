@@ -43,10 +43,19 @@ async function run(){
           const product = await productCollection.findOne(query);
           res.send(product);
       })
+    
       app.post('/booking' , async(req ,res ) => {
         const booking = req.body;
         const result =await bookingCollection.insertOne(booking);
         res.send(result);
+      })
+      app.get('/booking' , async (req , res) => {
+        const customer = req.query.customer;
+        const query = {customer : customer};
+        const booking = await bookingCollection.find(query).toArray();
+        console.log(booking)
+        res.send(booking);
+
       })
       app.put('/user/:email' , async(req ,res ) => {
         const email = req.params.email;
