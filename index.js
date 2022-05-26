@@ -21,6 +21,7 @@ async function run(){
         await client.connect()
         const productCollection = client.db('computer_mart').collection('products');
         const reviewCollection = client.db('computer_mart').collection('reviews');
+        const bookingCollection = client.db('computer_mart').collection('bookings');
         
         app.get('/review', async(req,res) =>{
          const query = {};
@@ -39,6 +40,11 @@ async function run(){
           const query = {_id:ObjectId(id)};
           const product = await productCollection.findOne(query);
           res.send(product);
+      })
+      app.post('/booking' , async(req ,res ) => {
+        const booking = req.body;
+        const result = bookingCollection.insertOne(booking);
+        res.send(result);
       })
     }
 
