@@ -4,7 +4,13 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+
+
+
 const port = process.env.PORT || 5000;
+
 const app = express();
 
 
@@ -41,6 +47,7 @@ async function run(){
         const reviewCollection = client.db('computer_mart').collection('reviews');
         const bookingCollection = client.db('computer_mart').collection('bookings');
         const userCollection = client.db('computer_mart').collection('users');
+        const paymentCollection = client.db('computer_mart').collection('payments');
         
         const verifyAdmin = async (req, res, next) => {
           const requester = req.decoded.email;
@@ -54,7 +61,20 @@ async function run(){
         }
 
 
+       app.post('/create-payment-intent' ,verifyJWT , async (req, res)=>{
+         const product = req.body;
+         const price = product.price;
+         const amount = price*100;
+         const paymentIntent = await stripe.paymentIntents.create({
+          amount: amount,
+          currency:'usd',
+          payment_method_types: ['card']
+          
+        });
 
+        res.send({clientSecret: paymentIntent.client_secret})
+
+       })
 
 
         app.get('/review', async(req,res) =>{
@@ -81,7 +101,7 @@ async function run(){
         const result =await bookingCollection.insertOne(booking);
         res.send(result);
       })
-      app.get('/booking' , verifyJWT, async (req , res) => {
+      app.get('/booking' ,  async (req , res) => {
         const customer = req.query.customer;
         const decodedEmail = req.decoded.email;
 
@@ -105,7 +125,27 @@ async function run(){
         res.send(booking); 
       })
 
-      app.get('/admin/:email' , async(req, res )=>{
+      app.patch('/booking/:id' , verifyJWT , async (req , res)=>{
+          const id = req.params.id;
+          const payment = req.body;
+          const filter = {_id: ObjectId(id)};
+          const updateDoc ={
+            $set: {
+               paid: true,
+               transactionId: payment.transactionId
+            }
+
+          };
+
+
+          const result = await paymentCollection.insertOne(payment);
+          res.send(updateDoc)
+          const updateBooking = await bookingCollection.updateOne(filter , updateDoc);
+          
+
+      })
+
+      app.get('/admin/:email' ,  async(req, res )=>{
        
        const email = req.params.email;
        const user = await userCollection.findOne({email : email});
@@ -151,6 +191,7 @@ async function run(){
         const users = await bookingCollection.find().toArray();
         res.send(users);
       })
+     
     }
 
   finally{
