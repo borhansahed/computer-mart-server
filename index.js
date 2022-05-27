@@ -102,7 +102,7 @@ async function run(){
         const result =await bookingCollection.insertOne(booking);
         res.send(result);
       })
-      app.get('/booking' ,  async (req , res) => {
+      app.get('/booking' , verifyJWT,  async (req , res) => {
         const customer = req.query.customer;
         const decodedEmail = req.decoded.email;
 
