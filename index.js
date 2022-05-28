@@ -119,25 +119,7 @@ async function run(){
         const result =await profileCollection.updateOne(filter, updateDoc, options);
         res.send(result)
         })
-        app.get('/profile' , verifyJWT,  async (req , res) => {
-          const customer = req.query.email;
-          const decodedEmail = req.decoded.email;
-  
-          if(customer === decodedEmail){
-  
-            const query = {customer : customer};
-          const booking = await profileCollection.find(query).toArray();
-         
-         return res.send(booking);
-          }
-          else{
-            return res.status(403).send({message : 'forbidden access'})
-          }
-  
-        })
-
-
-
+       
         app.get('/product/:id', async(req,res)=> {
           const id = req.params.id;
           const query = {_id:ObjectId(id)};
