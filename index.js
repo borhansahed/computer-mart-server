@@ -15,19 +15,7 @@ const port = process.env.PORT || 5000;
 
 const app = express();
 
-
-const corsConfig = {
-  origin: '*',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
-}
-app.use(cors(corsConfig))
-app.options("*", cors(corsConfig))
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,authorization")
-  next()
-})
+app.use(cors({origin: ['http://localhost:3000' , 'https://computer-mart-fb654.web.app']}));
 
 app.use(express.json());
 
@@ -147,7 +135,7 @@ async function run(){
         res.send(booking); 
       })
 
-      app.patch('/booking/:id' , verifyJWT , async (req , res)=>{
+      app.put('/booking/:id' , verifyJWT , async (req , res)=>{
           const id = req.params.id;
           const payment = req.body;
           const filter = {_id: ObjectId(id)};
