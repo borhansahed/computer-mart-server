@@ -21,7 +21,6 @@ const corsConfig = {
 }
 app.use(cors(corsConfig))
 app.options("*", cors(corsConfig))
-app.use(express.json())
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*")
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,authorization")
@@ -74,7 +73,7 @@ async function run(){
         }
 
 
-       app.post('/create-payment-intent' ,verifyJWT , async (req, res)=>{
+       app.post('/create-payment-intent' , async (req, res)=>{
          const product = req.body;
          const price = product.price;
          const amount = price*100;
