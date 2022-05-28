@@ -50,6 +50,7 @@ async function run(){
         const bookingCollection = client.db('computer_mart').collection('bookings');
         const userCollection = client.db('computer_mart').collection('users');
         const paymentCollection = client.db('computer_mart').collection('payments');
+        const profileCollection = client.db('computer_mart').collection('profiles');
         
         const verifyAdmin = async (req, res, next) => {
           const requester = req.decoded.email;
@@ -104,6 +105,12 @@ async function run(){
         app.post('/product' , async(req ,res ) => {
           const product = req.body;
           const result =await productCollection.insertOne(product);
+          res.send(result);
+        })
+
+        app.post('/profile' , async(req ,res ) => {
+          const profile = req.body;
+          const result =await profileCollection.insertOne(profile);
           res.send(result);
         })
 
