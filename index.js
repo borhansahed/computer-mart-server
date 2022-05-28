@@ -126,7 +126,7 @@ async function run(){
           if(customer === decodedEmail){
   
             const query = {customer : customer};
-          const booking = await bookingCollection.find(query).toArray();
+          const booking = await profileCollection.find(query).toArray();
          
          return res.send(booking);
           }
