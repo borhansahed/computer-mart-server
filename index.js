@@ -108,10 +108,32 @@ async function run(){
           res.send(result);
         })
 
-        app.post('/profile' , async(req ,res ) => {
-          const profile = req.body;
-          const result =await profileCollection.insertOne(profile);
-          res.send(result);
+        app.put('/profile' , async(req ,res ) => {
+          const email = req.params.email;
+        const user = req.body;
+        const filter = {email: email}
+        const options ={upsert: true}
+        const updateDoc ={
+          $set: user,
+        };
+        const result =await profileCollection.updateOne(filter, updateDoc, options);
+        res.send(result)
+        })
+        app.get('/profile' , verifyJWT,  async (req , res) => {
+          const customer = req.query.email;
+          const decodedEmail = req.decoded.email;
+  
+          if(customer === decodedEmail){
+  
+            const query = {customer : customer};
+          const booking = await bookingCollection.find(query).toArray();
+         
+         return res.send(booking);
+          }
+          else{
+            return res.status(403).send({message : 'forbidden access'})
+          }
+  
         })
 
 
