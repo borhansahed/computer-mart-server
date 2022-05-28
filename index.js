@@ -99,6 +99,16 @@ async function run(){
         const products = await cursor.toArray();
         res.send(products);
         });
+
+
+        app.post('/product' , async(req ,res ) => {
+          const product = req.body;
+          const result =await productCollection.insertOne(product);
+          res.send(result);
+        })
+
+
+
         app.get('/product/:id', async(req,res)=> {
           const id = req.params.id;
           const query = {_id:ObjectId(id)};
@@ -149,9 +159,8 @@ async function run(){
 
 
           const result = await paymentCollection.insertOne(payment);
-          res.send(updateDoc)
           const updateBooking = await bookingCollection.updateOne(filter , updateDoc);
-          
+          res.send(updateDoc)
 
       })
 
