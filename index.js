@@ -126,6 +126,14 @@ async function run(){
           const product = await productCollection.findOne(query);
           res.send(product);
       })
+      
+      // delete api
+
+      app.delete('/product/:id' , async(req , res) =>{
+        const id = req.params.id;
+        const qurey = {_id: ObjectI(id)};
+        
+      })
     
       app.post('/booking' , async(req ,res ) => {
         const booking = req.body;
@@ -167,6 +175,7 @@ async function run(){
             }
 
           };
+          // 
 
 
           const result = await paymentCollection.insertOne(payment);
