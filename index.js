@@ -132,6 +132,7 @@ async function run(){
       app.delete('/product/:id' , async(req , res) =>{
         const id = req.params.id;
         const qurey = {_id: ObjectI(id)};
+        res.send(qurey);
         
       })
     
