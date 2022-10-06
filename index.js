@@ -96,7 +96,7 @@ async function run(){
 
         app.get('/product', async(req,res) =>{
          const query = {};
-        const cursor = productCollection.find(query);
+        const cursor = productCollection.find(query).limit(6).skip(2);
         const products = await cursor.toArray();
         res.send(products);
         });
@@ -131,8 +131,9 @@ async function run(){
 
       app.delete('/product/:id' , async(req , res) =>{
         const id = req.params.id;
-        const qurey = {_id: ObjectI(id)};
-        res.send(qurey);
+        const query = {_id: ObjectId(id)};
+        const result = await productCollection.deleteOne(query);
+        res.send(result);
         
       })
     
@@ -227,9 +228,19 @@ async function run(){
         const users = await userCollection.find().toArray();
         res.send(users);
       })
+
+      
       app.get('/bookings', async(req,res)=>{
         const users = await bookingCollection.find().toArray();
         res.send(users);
+      })
+      // delete booking
+      app.delete('/bookings/:id', async(req,res) => {
+         const id = req.params.id;
+        const query = {_id:ObjectId(id)};
+        const booking = await bookingCollection.deleteOne(query);
+        res.send(booking);
+
       })
      
     }
