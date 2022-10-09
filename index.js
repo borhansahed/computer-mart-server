@@ -96,7 +96,7 @@ async function run(){
 
         app.get('/product', async(req,res) =>{
          const query = {};
-        const cursor = productCollection.find(query).limit(6).skip(2);
+        const cursor = productCollection.find(query);
         const products = await cursor.toArray();
         res.send(products);
         });
@@ -108,7 +108,7 @@ async function run(){
           res.send(result);
         })
 
-        app.put('/profile' , async(req ,res ) => {
+        app.put('/profile/:email' , async(req ,res ) => {
           const email = req.params.email;
         const user = req.body;
         const filter = {email: email}
@@ -118,6 +118,14 @@ async function run(){
         };
         const result =await profileCollection.updateOne(filter, updateDoc, options);
         res.send(result)
+        })
+
+        // get profile data
+        app.get('/profile/:email', async(req, res) =>{
+          const email = req.params.email;
+          const query = {email: email};
+          const result = await profileCollection.findOne(query);
+          res.send(result);
         })
        
         app.get('/product/:id', async(req,res)=> {
@@ -142,22 +150,17 @@ async function run(){
         const result =await bookingCollection.insertOne(booking);
         res.send(result);
       })
-      app.get('/booking' , verifyJWT,  async (req , res) => {
+      app.get('/booking' ,  async (req , res) => {
         const customer = req.query.customer;
-        const decodedEmail = req.decoded.email;
-
-        if(customer === decodedEmail){
-
-          const query = {customer : customer};
+        const query = {customer : customer};
         const booking = await bookingCollection.find(query).toArray();
-       
-       return res.send(booking);
-        }
-        else{
-          return res.status(403).send({message : 'forbidden access'})
-        }
+        res.send(booking);
+      
 
       })
+
+      // delete myOrder
+   
 
       app.get('/booking/:id' , verifyJWT , async (req, res ) =>{
         const id = req.params.id;
