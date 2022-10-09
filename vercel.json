@@ -9,8 +9,9 @@
    "routes":[
     {
         "src" : "/product",
-        "methods": ["GET"],
-        "dest": "/index.js"
+         "dest": "./index.js",
+        "methods": ["GET"]
+       
     }
    ]
   }
