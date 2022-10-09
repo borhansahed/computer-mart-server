@@ -8,10 +8,11 @@
    ],
    "routes":[
     {
-        "src" : "/product",
-         "dest": "./index.js",
-        "methods": ["GET"]
-       
+        "src" : "./product",
+        
+        "methods": "GET",
+
+        "dest": "./index.js"
     }
    ]
   }
