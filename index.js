@@ -6,7 +6,7 @@ const express = require('express');
 const cors = require('cors');
 
 const jwt = require('jsonwebtoken');
-const stripe = require('stripe')('sk_test_51L3zoGFafvgGReSnALBrXYIsLBi0Suv6v2o9Er0LXbWcT1zkK9ZNswIyz6OO7JjYDRg9t5D2ddRrvIfXOMNpHBOo00MeEeyUA6');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 
 
@@ -64,7 +64,7 @@ async function run(){
         }
 
 
-       app.post('/create-payment-intent', async (req, res)=>{
+       app.post('/create-payment-intent', verifyJWT, async (req, res)=>{
          const product = req.body;
          const price = product.price;
          const amount = price*100;
